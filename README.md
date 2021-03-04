@@ -2,9 +2,9 @@
 
 ## Development
 
-1. Prerequisites: Node v12.19.0, Postgres 13.0
+1. Prerequisites: Node v14.16.0, Postgres 13.0
 
-2. Rename '.env.sample' to '.env' and adjust values
+2. Rename '.env.sample' to '.env' for both main folder and prisma folder and adjust values
 
 3. Run
 
