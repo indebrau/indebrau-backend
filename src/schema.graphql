@@ -39,7 +39,7 @@ type Mutation {
     userIds: [ID!]!
   ): BrewingProcess!
 
-  deleteBrewingProcess(brewingProcessId: ID!): SuccessMessage!
+  deleteBrewingProcess(id: ID!): SuccessMessage!
 
   # Sensor Mutations (Admin)
   createSensor(
@@ -74,7 +74,7 @@ type Mutation {
     brewingStepName: StepName!
   ): MediaStream!
 
-  deleteMediaStream(mediaStreamId: ID!): SuccessMessage!
+  deleteMediaStream(id: ID!): SuccessMessage!
 }
 
 type User {

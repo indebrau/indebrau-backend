@@ -37,21 +37,21 @@ const mediaStreamMutations = {
     return createdMediaStream;
   },
 
-  async deleteMediaStream(parent, { mediaStreamId }, ctx) {
+  async deleteMediaStream(parent, { id }, ctx) {
     checkUserPermissions(ctx, ['ADMIN']);
-    const where = { id: parseInt(mediaStreamId) };
+    const where = { id: parseInt(id) };
     let mediaStream;
     // first, get brewing process id of stream
     mediaStream = await ctx.prisma.mediaStream.findUnique({ where });
     if (!mediaStream) {
-      throw new Error(`Media stream with id ${mediaStreamId} does not exist!`);
+      throw new Error(`Media stream with id ${id} does not exist!`);
     }
     // now delete stream
     await ctx.prisma.mediaStream.delete({ where });
     // update cache since stream was deleted in db
     await activeMediaStreamsCache(ctx, true);
     // finally, remove media from disk
-    await deleteMediaFolder(mediaStream.brewingStepId, mediaStreamId);
+    await deleteMediaFolder(mediaStream.brewingStepId, id);
     return { message: 'Deleted!' };
   },
 };

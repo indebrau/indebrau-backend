@@ -220,11 +220,11 @@ const brewingProcessMutations = {
     return await ctx.prisma.brewingProcess.update({ where, data });
   },
 
-  async deleteBrewingProcess(parent, { brewingProcessId }, ctx) {
+  async deleteBrewingProcess(parent, { id }, ctx) {
     checkUserPermissions(ctx, ['ADMIN']);
     // delete and return steps to delete folders afterwards
     const { brewingSteps } = await ctx.prisma.brewingProcess.delete({
-      where: { id: parseInt(brewingProcessId) },
+      where: { id: parseInt(id) },
       select: { brewingSteps: {} },
     });
     // update caches (associated graphs and streams are deleted cascadingly)
@@ -236,7 +236,7 @@ const brewingProcessMutations = {
         await deleteMediaFolder(brewingSteps[i].id);
       } catch (e) {
         throw new Error(
-          `Problems deleting media folders for brewing process ${brewingProcessId}`
+          `Problems deleting media folders for brewing process ${id}`
         );
       }
     }

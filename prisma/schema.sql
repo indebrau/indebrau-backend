@@ -55,7 +55,7 @@ CREATE TABLE "public"."UserToBrewingProcess" (
 
 CREATE TABLE "public"."Sensor" (
   "topic" VARCHAR(255) PRIMARY KEY NOT NULL,
-  "name" VARCHAR(255) NOT NULL
+  "name" VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE "public"."Graph" (

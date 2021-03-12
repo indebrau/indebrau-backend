@@ -87,7 +87,7 @@ model BrewingStep {
 
 model Sensor {
   topic String  @id @db.VarChar(255)
-  name  String  @db.VarChar(255)
+  name  String  @unique @db.VarChar(255)
   Graph Graph[]
 }
 
