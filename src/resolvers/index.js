@@ -1,9 +1,13 @@
 const { userQueries } = require('./queries/userQueries');
 const { brewingProcessQueries } = require('./queries/brewingProcessQueries');
 const { graphQueries } = require('./queries/graphQueries');
+const { sensorQueries } = require('./queries/sensorQueries');
 const { mediaStreamQueries } = require('./queries/mediaStreamQueries');
 const { userMutations } = require('./mutations/userMutations');
-const { brewingProcessMutations } = require('./mutations/brewingProcessMutations');
+const { sensorMutations } = require('./mutations/sensorMutations');
+const {
+  brewingProcessMutations,
+} = require('./mutations/brewingProcessMutations');
 const { graphMutations } = require('./mutations/graphMutations');
 const { mediaStreamMutations } = require('./mutations/mediaStreamMutations');
 const { userType } = require('./types/userType');
@@ -19,13 +23,15 @@ module.exports = {
     ...userQueries,
     ...brewingProcessQueries,
     ...graphQueries,
-    ...mediaStreamQueries
+    ...sensorQueries,
+    ...mediaStreamQueries,
   },
   Mutation: {
     ...userMutations,
+    ...sensorMutations,
     ...brewingProcessMutations,
     ...graphMutations,
-    ...mediaStreamMutations
+    ...mediaStreamMutations,
   },
   User: { ...userType },
   BrewingProcess: { ...brewingProcessType },
@@ -33,5 +39,5 @@ module.exports = {
   Graph: { ...graphType },
   GraphData: { ...graphDataType },
   MediaStream: { ...mediaStreamType },
-  MediaFile: { ...mediaFileType }
+  MediaFile: { ...mediaFileType },
 };

@@ -1,4 +1,7 @@
-const { AuthenticationError, ForbiddenError } = require('apollo-server-express');
+const {
+  AuthenticationError,
+  ForbiddenError,
+} = require('apollo-server-express');
 
 /* Authorizes users, permissions may be undefined for any permissions acceptable */
 function checkUserPermissions(ctx, permissionsNeeded, brewingProcessId) {
@@ -19,7 +22,7 @@ function checkUserPermissions(ctx, permissionsNeeded, brewingProcessId) {
   // user tries to access brewing process, check if she participates
   if (brewingProcessId && !ctx.req.user.permissions.includes('ADMIN')) {
     let found = false;
-    ctx.req.user.participatingBrewingProcesses.map(process => {
+    ctx.req.user.participatingBrewingProcesses.map((process) => {
       if (process.brewingProcess.id == brewingProcessId) {
         // user has permission
         found = true;
@@ -35,5 +38,5 @@ function checkUserPermissions(ctx, permissionsNeeded, brewingProcessId) {
 }
 
 module.exports = {
-  checkUserPermissions
+  checkUserPermissions,
 };

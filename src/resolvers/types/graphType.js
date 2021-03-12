@@ -12,9 +12,15 @@ const graphType = {
 
   async brewingStep(parent, args, ctx) {
     return await ctx.prisma.brewingStep.findUnique({
-      where: { id: parent.brewingStepId }
+      where: { id: parent.brewingStepId },
     });
-  }
+  },
+
+  async sensor(parent, args, ctx) {
+    return await ctx.prisma.sensor.findUnique({
+      where: { topic: parent.sensorTopic },
+    });
+  },
 };
 
 module.exports = { graphType };

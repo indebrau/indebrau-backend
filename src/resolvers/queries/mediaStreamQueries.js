@@ -12,10 +12,10 @@ const mediaStreamQueries = {
 
   async mediaStream(parent, { id }, ctx) {
     checkUserPermissions(ctx, ['USER'], undefined, id);
-    return await ctx.prisma.mediaStream.findUnique(
-      { where: { id: parseInt(id) } }
-    );
-  }
+    return await ctx.prisma.mediaStream.findUnique({
+      where: { id: parseInt(id) },
+    });
+  },
 };
 
 module.exports = { mediaStreamQueries };

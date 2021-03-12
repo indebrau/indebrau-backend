@@ -8,13 +8,13 @@ const userMutations = {
     const name = args.name;
     const email = args.email;
     const user = await ctx.prisma.user.create({
-      data: { name, password, email, permissions: { set: ['USER'] } }
+      data: { name, password, email, permissions: { set: ['USER'] } },
     });
     let token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
     ctx.res.cookie('token', token, {
       httpOnly: true,
       //      secure: true, // add in deployment to ensure https
-      maxAge: 1000 * 60 * 60 * 24 * 365 // 1 year cookie
+      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year cookie
     });
     return user;
   },
@@ -32,7 +32,7 @@ const userMutations = {
     ctx.res.cookie('token', token, {
       httpOnly: true,
       //      secure: true, // add in deployment to ensure https
-      maxAge: 1000 * 60 * 60 * 24 * 365 // 1 year cookie
+      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year cookie
     });
     return user;
   },
@@ -40,7 +40,7 @@ const userMutations = {
   signout(parent, args, ctx) {
     ctx.res.clearCookie('token');
     return { message: 'Goodbye!' };
-  }
+  },
 };
 
 module.exports = { userMutations };

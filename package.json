@@ -8,7 +8,8 @@
     "deploy": "npm run prisma && npm run start",
     "prisma": "npx prisma introspect && npx prisma generate",
     "start": "node -r dotenv/config src/index.js",
-    "dev": "nodemon -e js,graphql -x node --inspect -r dotenv/config src/index.js | pino-pretty -c -l -t SYS:standard"
+    "dev": "nodemon -e js,graphql -x node --inspect -r dotenv/config src/index.js | pino-pretty -c -l -t SYS:standard",
+    "lint": "eslint --fix . && echo 'Lint complete.'"
   },
   "engines": {
     "node": "~14.16.0",
@@ -16,7 +17,7 @@
   },
   "dependencies": {
     "@prisma/client": "2.18.0",
-    "apollo-server-express": "2.21.0",
+    "apollo-server-express": "2.21.1",
     "bcryptjs": "2.4.3",
     "body-parser": "1.19.0",
     "cookie-parser": "1.4.5",
@@ -24,7 +25,7 @@
     "dotenv": "8.2.0",
     "express-pino-logger": "6.0.0",
     "fs-extra": "9.1.0",
-    "graphql": "^15.5.0",
+    "graphql": "15.5.0",
     "jsonwebtoken": "8.5.1",
     "multer": "1.4.2",
     "pino": "6.11.1"
@@ -33,7 +34,10 @@
     "prisma": "2.18.0",
     "eslint": "7.21.0",
     "nodemon": "2.0.7",
-    "pino-pretty": "4.6.0"
+    "pino-pretty": "4.7.1",
+    "eslint-config-prettier": "8.1.0",
+    "eslint-plugin-prettier": "3.3.1",
+    "prettier": "2.2.1"
   },
   "author": "Peter de Lange",
   "license": "ISC"

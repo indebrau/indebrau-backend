@@ -7,8 +7,8 @@ const userType = {
     let { participatingBrewingProcesses } = await ctx.prisma.user.findUnique({
       where: { id: parent.id },
       select: {
-        participatingBrewingProcesses: { select: { brewingProcess: {} } }
-      }
+        participatingBrewingProcesses: { select: { brewingProcess: {} } },
+      },
     });
     // bit of magic to get the processes in an array of the right format...
     let processes = [];
@@ -20,7 +20,7 @@ const userType = {
 
   async token(parent) {
     return jwt.sign({ userId: parent.id }, process.env.APP_SECRET);
-  }
+  },
 };
 
 module.exports = { userType };

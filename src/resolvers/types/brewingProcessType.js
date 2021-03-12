@@ -4,7 +4,11 @@ const brewingProcessType = {
   async brewingSteps(parent, { active }, ctx) {
     let where = { brewingProcessId: parent.id };
     if (active) {
-      where = { brewingProcessId: parent.id, end: null, NOT: [{ start: null }] };
+      where = {
+        brewingProcessId: parent.id,
+        end: null,
+        NOT: [{ start: null }],
+      };
     }
     return await ctx.prisma.brewingStep.findMany({ where: where });
   },
@@ -15,7 +19,7 @@ const brewingProcessType = {
     checkUserPermissions(ctx, ['ADMIN']);
     let returnValue = await ctx.prisma.brewingProcess.findMany({
       where: { id: parent.id },
-      select: { participatingUsers: { select: { user: {} } } }
+      select: { participatingUsers: { select: { user: {} } } },
     });
     // get it into the right format...
     let participatingUsers = returnValue[0].participatingUsers;
@@ -25,7 +29,7 @@ const brewingProcessType = {
       users.push(user);
     }
     return users;
-  }
+  },
 };
 
 module.exports = { brewingProcessType };

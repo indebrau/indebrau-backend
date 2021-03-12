@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS "public"."User",
 "public"."BrewingProcess",
 "public"."UserToBrewingProcess",
 "public"."BrewingStep",
+"public"."Sensor",
 "public"."Graph",
 "public"."GraphData",
 "public"."MediaStream",
@@ -52,10 +53,15 @@ CREATE TABLE "public"."UserToBrewingProcess" (
    UNIQUE ("userId", "brewingProcessId")
 );
 
+CREATE TABLE "public"."Sensor" (
+  "topic" VARCHAR(255) PRIMARY KEY NOT NULL,
+  "name" VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE "public"."Graph" (
   id SERIAL PRIMARY KEY NOT NULL,
-  "sensorName" VARCHAR(255) NOT NULL,
   "updateFrequency" INTEGER NOT NULL,
+  "sensorTopic" VARCHAR(255) REFERENCES "public"."Sensor"(topic) ON DELETE CASCADE,
   "brewingStepId" INTEGER REFERENCES "public"."BrewingStep"(id) ON DELETE CASCADE
 );
 

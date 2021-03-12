@@ -23,5 +23,5 @@ async function reduceDataEvenly(data, dataPoints) {
 }
 
 module.exports = {
-  reduceDataEvenly
+  reduceDataEvenly,
 };

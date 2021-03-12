@@ -2,15 +2,20 @@
 var cachedActiveGraphs = null;
 async function activeGraphCache(ctx, update) {
   if (cachedActiveGraphs == null || update) {
-    ctx.logger.app('refreshing active graph list...');
+    ctx.logger.app('Refreshing active graph list...');
     cachedActiveGraphs = [];
     try {
       const queryResult = await ctx.prisma.brewingProcess.findMany({
-        select: { brewingSteps: { where:  {end: null, NOT: [{ start: null }]}, select: { graphs: {} } } }
+        select: {
+          brewingSteps: {
+            where: { end: null, NOT: [{ start: null }] },
+            select: { graphs: {} },
+          },
+        },
       });
       if (queryResult) {
-        queryResult.map(process => {
-          process.brewingSteps.map(graphs => {
+        queryResult.map((process) => {
+          process.brewingSteps.map((graphs) => {
             cachedActiveGraphs = cachedActiveGraphs.concat(graphs.graphs);
           });
         });
@@ -26,16 +31,23 @@ async function activeGraphCache(ctx, update) {
 var cachedMediaStreams = null;
 async function activeMediaStreamsCache(ctx, update) {
   if (cachedMediaStreams == null || update) {
-    ctx.logger.app('refreshing active media stream list...');
+    ctx.logger.app('Refreshing active media stream list...');
     cachedMediaStreams = [];
     try {
       const queryResult = await ctx.prisma.brewingProcess.findMany({
-        select: { brewingSteps: { where: {end: null, NOT: [{ start: null }]}, select: { mediaStreams: {} } } }
+        select: {
+          brewingSteps: {
+            where: { end: null, NOT: [{ start: null }] },
+            select: { mediaStreams: {} },
+          },
+        },
       });
       if (queryResult) {
-        queryResult.map(process => {
-          process.brewingSteps.map(streams => {
-            cachedMediaStreams = cachedMediaStreams.concat(streams.mediaStreams);
+        queryResult.map((process) => {
+          process.brewingSteps.map((streams) => {
+            cachedMediaStreams = cachedMediaStreams.concat(
+              streams.mediaStreams
+            );
           });
         });
       }
@@ -46,33 +58,50 @@ async function activeMediaStreamsCache(ctx, update) {
   return cachedMediaStreams;
 }
 
-/* Cache all incoming sensor data (regardless of graphs) for up to 48h */
-var sensorDataCache = new Map();
-function addSensorDataToCache(topic, sensorValue, sensorTimeStamp) {
-  if (topic != null && sensorValue != null && sensorTimeStamp != null) {
-    let newEntry = {
-      sensorValue: sensorValue,
-      sensorTimeStamp: sensorTimeStamp
-    };
-    sensorDataCache.set(topic, newEntry);
-  } else {
-    throw new Error('Sensor cache: missing values to add!');
+/* Returns sensor cache. */
+var cachedSensors = null;
+async function sensorCache(ctx, update) {
+  if (cachedSensors == null || update) {
+    ctx.logger.app('Refreshing sensors...');
+    cachedSensors = new Map();
+    try {
+      const queryResult = await ctx.prisma.sensor.findMany();
+      if (queryResult) {
+        queryResult.map((sensor) => {
+          cachedSensors.set(sensor.topic, { sensorName: sensor.name });
+        });
+      }
+      console.log(cachedSensors);
+    } catch (e) {
+      throw new Error(`Problems updating sensor cache: ${e}`);
+    }
   }
+  return cachedSensors;
 }
 
-/* Returns sensor data cache. Removes values older than 48h */
-function cachedSensorData() {
-  sensorDataCache.forEach((value, key) => {
-    if(new Date(value.sensorTimeStamp).getTime() < new Date() - 48 * 60 * 60 * 1000) { // 48h
-      sensorDataCache.delete(key);
+/* Cache all incoming sensor data (regardless of graph) */
+async function addSensorDataToCache(ctx, topic, sensorValue, sensorTimeStamp) {
+  // check for initialization
+  if (cachedSensors == null) {
+    await sensorCache(ctx);
+  }
+  if (topic != null && sensorValue != null && sensorTimeStamp != null) {
+    if (cachedSensors.has(topic)) {
+      let entry = cachedSensors.get(topic); // get the currently stored data
+      entry.sensorValue = sensorValue;
+      entry.sensorTimeStamp = sensorTimeStamp;
+      cachedSensors.set(topic, entry);
+    } else {
+      throw new Error('Sensor data cache: sensor does not exist!');
     }
-  });
-  return sensorDataCache;
+  } else {
+    throw new Error('Sensor data cache: missing values to add!');
+  }
 }
 
 module.exports = {
   activeGraphCache,
   activeMediaStreamsCache,
   addSensorDataToCache,
-  cachedSensorData
+  sensorCache,
 };

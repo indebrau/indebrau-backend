@@ -1,6 +1,9 @@
 const { activeMediaStreamsCache } = require('../../utils/caches');
 const { checkUserPermissions } = require('../../utils/checkUserPermissions');
-const { createMediaFolder, deleteMediaFolder } = require('../../utils/mediaFileHandling');
+const {
+  createMediaFolder,
+  deleteMediaFolder,
+} = require('../../utils/mediaFileHandling');
 
 const mediaStreamMutations = {
   async createMediaStream(parent, args, ctx) {
@@ -9,22 +12,27 @@ const mediaStreamMutations = {
     // ended brewing process (step). Then, this stream will not be "active".
     let steps = await ctx.prisma.brewingStep.findMany({
       where: {
-        AND: [{ brewingProcessId: parseInt(args.brewingProcessId) },
-          { name: args.brewingStepName }]
-      }
+        AND: [
+          { brewingProcessId: parseInt(args.brewingProcessId) },
+          { name: args.brewingStepName },
+        ],
+      },
     });
     let createdMediaStream = await ctx.prisma.mediaStream.create({
       data: {
         mediaFilesName: args.mediaFilesName,
         overwrite: args.overwrite,
         updateFrequency: args.updateFrequency,
-        brewingStep: { connect: { id: steps[0].id } }
-      }
+        brewingStep: { connect: { id: steps[0].id } },
+      },
     });
     // update cache (since new stream was added)
     await activeMediaStreamsCache(ctx, true);
     // create folder for media and return
-    await createMediaFolder(createdMediaStream.brewingStepId, createdMediaStream.id);
+    await createMediaFolder(
+      createdMediaStream.brewingStepId,
+      createdMediaStream.id
+    );
     // TODO what if media folder creation fails -> Rollback needed!
     return createdMediaStream;
   },
@@ -45,7 +53,7 @@ const mediaStreamMutations = {
     // finally, remove media from disk
     await deleteMediaFolder(mediaStream.brewingStepId, mediaStreamId);
     return { message: 'Deleted!' };
-  }
+  },
 };
 
 module.exports = { mediaStreamMutations };

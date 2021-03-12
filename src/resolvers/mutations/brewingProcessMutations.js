@@ -57,94 +57,94 @@ const brewingProcessMutations = {
       const brewingStep = brewingProcess.brewingSteps[i];
       // advance process
       switch (brewingStep.name) {
-      case 'PREPARING': {
-        if (brewingStep.start == null) {
-          data.start = now;
-          data.brewingSteps = {
-            updateMany: {
-              data: { start: now },
-              where: { name: 'PREPARING' },
-            },
-          };
-        } else if (brewingStep.end == null) {
-          data.brewingSteps = {
-            updateMany: [
-              {
-                data: { end: now },
+        case 'PREPARING': {
+          if (brewingStep.start == null) {
+            data.start = now;
+            data.brewingSteps = {
+              updateMany: {
+                data: { start: now },
                 where: { name: 'PREPARING' },
               },
-              {
-                data: { start: now },
-                where: { name: 'BREWING' },
-              },
-            ],
-          };
+            };
+          } else if (brewingStep.end == null) {
+            data.brewingSteps = {
+              updateMany: [
+                {
+                  data: { end: now },
+                  where: { name: 'PREPARING' },
+                },
+                {
+                  data: { start: now },
+                  where: { name: 'BREWING' },
+                },
+              ],
+            };
+          }
+          break;
         }
-        break;
-      }
-      case 'BREWING': {
-        if (!brewingStep.end && brewingStep.start) {
-          data.brewingSteps = {
-            updateMany: [
-              {
-                data: { end: now },
-                where: { name: 'BREWING' },
-              },
-              {
-                data: { start: now },
-                where: { name: 'FERMENTING' },
-              },
-            ],
-          };
+        case 'BREWING': {
+          if (!brewingStep.end && brewingStep.start) {
+            data.brewingSteps = {
+              updateMany: [
+                {
+                  data: { end: now },
+                  where: { name: 'BREWING' },
+                },
+                {
+                  data: { start: now },
+                  where: { name: 'FERMENTING' },
+                },
+              ],
+            };
+          }
+          break;
         }
-        break;
-      }
-      case 'FERMENTING': {
-        if (!brewingStep.end && brewingStep.start) {
-          data.brewingSteps = {
-            updateMany: [
-              {
-                data: { end: now },
-                where: { name: 'FERMENTING' },
-              },
-              {
-                data: { start: now },
-                where: { name: 'CONDITIONING' },
-              },
-            ],
-          };
+        case 'FERMENTING': {
+          if (!brewingStep.end && brewingStep.start) {
+            data.brewingSteps = {
+              updateMany: [
+                {
+                  data: { end: now },
+                  where: { name: 'FERMENTING' },
+                },
+                {
+                  data: { start: now },
+                  where: { name: 'CONDITIONING' },
+                },
+              ],
+            };
+          }
+          break;
         }
-        break;
-      }
-      case 'CONDITIONING': {
-        if (!brewingStep.end && brewingStep.start) {
-          data.brewingSteps = {
-            updateMany: [
-              {
+        case 'CONDITIONING': {
+          if (!brewingStep.end && brewingStep.start) {
+            data.brewingSteps = {
+              updateMany: [
+                {
+                  data: { end: now },
+                  where: { name: 'CONDITIONING' },
+                },
+                {
+                  data: { start: now },
+                  where: { name: 'BOTTLING' },
+                },
+              ],
+            };
+          }
+          break;
+        }
+        case 'BOTTLING': {
+          if (!brewingStep.end && brewingStep.start) {
+            data.brewingSteps = {
+              updateMany: {
                 data: { end: now },
-                where: { name: 'CONDITIONING' },
-              },
-              {
-                data: { start: now },
                 where: { name: 'BOTTLING' },
               },
-            ],
-          };
+            };
+            data.end = now;
+          }
+          break;
         }
-        break;
-      }
-      case 'BOTTLING': {
-        if (!brewingStep.end && brewingStep.start) {
-          data.brewingSteps = {
-            updateMany: {
-              data: { end: now },
-              where: { name: 'BOTTLING' },
-            },
-          };
-          data.end = now;
-        }
-        break;
-      }
       }
       // we got our update, no need to continue
       if (data.brewingSteps) {
@@ -172,10 +172,14 @@ const brewingProcessMutations = {
 
     let brewingProcess = await ctx.prisma.brewingProcess.findUnique({ where });
     if (!brewingProcess) {
-      throw new Error(`Cannot find brewing process with id ${brewingProcessId}`);
+      throw new Error(
+        `Cannot find brewing process with id ${brewingProcessId}`
+      );
     }
     if (!brewingProcess.end) {
-      throw new Error(`Brewing process with id${brewingProcessId} not ended yet!`);
+      throw new Error(
+        `Brewing process with id${brewingProcessId} not ended yet!`
+      );
     }
     return await ctx.prisma.brewingProcess.update({ where, data });
   },
@@ -189,7 +193,9 @@ const brewingProcessMutations = {
       select: { id: true, participatingUsers: { select: { userId: true } } },
     });
     if (!brewingProcess) {
-      throw new Error(`Cannot find brewing process with id ${brewingProcessId}`);
+      throw new Error(
+        `Cannot find brewing process with id ${brewingProcessId}`
+      );
     }
     let data = { participatingUsers: { create: [] } };
     let participatingUsers = brewingProcess.participatingUsers;

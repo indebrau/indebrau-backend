@@ -9,9 +9,9 @@ const brewingProcessQueries = {
   async brewingProcess(parent, args, ctx) {
     checkUserPermissions(ctx, ['USER'], args.id);
     return await ctx.prisma.brewingProcess.findUnique({
-      where: { id: parseInt(args.id) }
+      where: { id: parseInt(args.id) },
     });
-  }
+  },
 };
 
 module.exports = { brewingProcessQueries };

@@ -2,7 +2,10 @@ const { ApolloServer } = require('apollo-server-express');
 const express = require('express');
 const pino = require('pino');
 const expressPino = require('express-pino-logger');
-const logger = pino({ level: process.env.LOG_LEVEL, customLevels: { app: 41 } });
+const logger = pino({
+  level: process.env.LOG_LEVEL,
+  customLevels: { app: 41 },
+});
 const expressLogger = expressPino({ logger });
 
 var cors = require('cors');
@@ -22,18 +25,19 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   formatError: (err) => {
-    if (err.extensions.code == 'UNAUTHENTICATED'
-      || err.extensions.code == 'FORBIDDEN') {
+    if (
+      err.extensions.code == 'UNAUTHENTICATED' ||
+      err.extensions.code == 'FORBIDDEN'
+    ) {
       // we don't need the stacktrace here
       logger.warn(err.message);
       return err;
-    }
-    else {
+    } else {
       logger.error(err);
       return err;
     }
   },
-  context: (req) => ({ ...req, prisma, logger })
+  context: (req) => ({ ...req, prisma, logger }),
 });
 
 // Note, that the order of appearance of the middleware components matters here!
@@ -42,7 +46,7 @@ app.use(expressLogger);
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 app.use(cookieParser());
@@ -62,16 +66,18 @@ app.use(async (req, res, next) => {
     }
   } catch (err) {
     res.clearCookie('token');
-    return res.status(401).end('unauthorized, please use correct credentials..');
+    return res
+      .status(401)
+      .end('unauthorized, please use correct credentials..');
   }
   if (userId) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
         participatingBrewingProcesses: {
-          select: { brewingProcess: { select: { id: true } } }
-        }
-      }
+          select: { brewingProcess: { select: { id: true } } },
+        },
+      },
     });
     req.user = user;
   }
