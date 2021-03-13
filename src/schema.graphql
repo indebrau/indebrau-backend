@@ -59,7 +59,7 @@ type Mutation {
 
   deleteGraph(id: ID!): SuccessMessage!
 
-  addGraphData(
+  addSensorData(
     sensorTopic: String!
     sensorTimeStamp: DateTime!
     sensorValue: String!

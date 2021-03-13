@@ -1,9 +1,8 @@
 {
   "name": "indebrau-backend",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
   "description": "Provides a backend for indebrau",
-  "repository": "https://github.com/PedeLa/indebrau-backend",
+  "repository": "https://github.com/indebrau/indebrau-backend",
   "scripts": {
     "deploy": "npm run prisma && npm run start",
     "prisma": "npx prisma introspect && npx prisma generate",

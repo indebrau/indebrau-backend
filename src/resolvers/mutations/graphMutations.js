@@ -41,7 +41,7 @@ const graphMutations = {
     return { message: 'Deleted!' };
   },
 
-  async addGraphData(
+  async addSensorData(
     parent,
     { sensorTopic, sensorValue, sensorTimeStamp },
     ctx
