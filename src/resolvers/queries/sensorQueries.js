@@ -10,9 +10,10 @@ const sensorQueries = {
       if (value != null)
         returnArray.push({
           topic: key,
-          name: value.sensorName,
-          latestTimeStamp: value.sensorTimeStamp,
-          latestValue: value.sensorValue,
+          name: value.name,
+          binary: value.binary,
+          latestTimeStamp: value.timeStamp,
+          latestValue: value.value,
         });
     });
     return returnArray;

@@ -8,6 +8,7 @@ const sensorMutations = {
       data: {
         topic: args.topic,
         name: args.name,
+        binary: args.binary,
       },
     });
     await sensorCache(ctx, true);

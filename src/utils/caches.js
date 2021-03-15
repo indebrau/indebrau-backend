@@ -68,7 +68,10 @@ async function sensorCache(ctx, update) {
       const queryResult = await ctx.prisma.sensor.findMany();
       if (queryResult) {
         queryResult.map((sensor) => {
-          cachedSensors.set(sensor.topic, { sensorName: sensor.name });
+          cachedSensors.set(sensor.topic, {
+            name: sensor.name,
+            binary: sensor.binary,
+          });
         });
       }
       console.log(cachedSensors);
@@ -80,16 +83,16 @@ async function sensorCache(ctx, update) {
 }
 
 /* Cache all incoming sensor data (regardless of graph) */
-async function addSensorDataToCache(ctx, topic, sensorValue, sensorTimeStamp) {
+async function addSensorDataToCache(ctx, topic, value, timeStamp) {
   // check for initialization
   if (cachedSensors == null) {
     await sensorCache(ctx);
   }
-  if (topic != null && sensorValue != null && sensorTimeStamp != null) {
+  if (topic != null && value != null && timeStamp != null) {
     if (cachedSensors.has(topic)) {
       let entry = cachedSensors.get(topic); // get the currently stored data
-      entry.sensorValue = sensorValue;
-      entry.sensorTimeStamp = sensorTimeStamp;
+      entry.value = value;
+      entry.timeStamp = timeStamp;
       cachedSensors.set(topic, entry);
     } else {
       throw new Error('Sensor data cache: sensor does not exist!');

@@ -45,6 +45,7 @@ type Mutation {
   createSensor(
     topic: String!
     name: String!
+    binary: Boolean!
   ): SuccessMessage!
 
   deleteSensor(topic: String!): SuccessMessage!
@@ -110,6 +111,7 @@ type BrewingStep {
 type Sensor {
   topic: String!
   name: String!
+  binary: Boolean!
   latestTimeStamp: DateTime
   latestValue: String
 }

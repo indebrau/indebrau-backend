@@ -48,7 +48,16 @@ const graphMutations = {
   ) {
     checkUserPermissions(ctx, ['ADMIN']);
     // add value to sensor data cache first and fetch graphs from cache
-    addSensorDataToCache(ctx, sensorTopic, sensorValue, sensorTimeStamp);
+    try {
+      await addSensorDataToCache(
+        ctx,
+        sensorTopic,
+        sensorValue,
+        sensorTimeStamp
+      );
+    } catch (e) {
+      throw new Error(e);
+    }
     const activeGraphs = await activeGraphCache(ctx);
     let insertedGraphData = [];
     // get active graphs with matching sensor name
@@ -84,12 +93,6 @@ const graphMutations = {
           );
         }
       }
-    }
-    // check if some graph was found
-    if (insertedGraphData.length == 0) {
-      throw new Error(
-        `Did not add to any graphs with sensor name ${sensorTopic}`
-      );
     }
     return insertedGraphData;
   },

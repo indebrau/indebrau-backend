@@ -86,9 +86,10 @@ model BrewingStep {
 }
 
 model Sensor {
-  topic String  @id @db.VarChar(255)
-  name  String  @unique @db.VarChar(255)
-  Graph Graph[]
+  topic  String   @id @db.VarChar(255)
+  name   String   @unique @db.VarChar(255)
+  binary Boolean? @default(false)
+  Graph  Graph[]
 }
 
 enum MimeType {
