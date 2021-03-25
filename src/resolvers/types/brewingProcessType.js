@@ -2,6 +2,7 @@ const { checkUserPermissions } = require('../../utils/checkUserPermissions');
 
 const brewingProcessType = {
   async brewingSteps(parent, { active }, ctx) {
+    checkUserPermissions(ctx, ['USER'], parent.id);
     let where = { brewingProcessId: parent.id };
     if (active) {
       where = {

@@ -31,7 +31,7 @@ function checkUserPermissions(ctx, permissionsNeeded, brewingProcessId) {
     // no permission
     if (!found) {
       throw new ForbiddenError(
-        `You do not have the right to access brewing process: ${brewingProcessId}`
+        `You do not have the right to access details of brewing process: ${brewingProcessId}`
       );
     }
   }

@@ -3,8 +3,8 @@ type Query {
   me: User
   users: [User]! # admin
   # Brewing Process Queries
-  brewingProcesses: [BrewingProcess!]! # admin
-  brewingProcess(id: ID!): BrewingProcess # admin and participating users
+  brewingProcesses(active: Boolean, ended: Boolean): [BrewingProcess!]! # basic info all, details admin
+  brewingProcess(id: ID!): BrewingProcess #  basic info all, details admin and participating users
   # Graph Queries
   graphs(active: Boolean): [Graph!]! # admin, active is default set to false
   graph(id: ID!): Graph # admin

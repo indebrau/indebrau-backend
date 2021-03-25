@@ -74,7 +74,6 @@ async function sensorCache(ctx, update) {
           });
         });
       }
-      console.log(cachedSensors);
     } catch (e) {
       throw new Error(`Problems updating sensor cache: ${e}`);
     }

@@ -178,7 +178,7 @@ const brewingProcessMutations = {
     }
     if (!brewingProcess.end) {
       throw new Error(
-        `Brewing process with id${brewingProcessId} not ended yet!`
+        `Brewing process with id ${brewingProcessId} not ended yet!`
       );
     }
     return await ctx.prisma.brewingProcess.update({ where, data });
